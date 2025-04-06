@@ -1,0 +1,192 @@
+@"http://www.eclipse.org/OCL/Import"(ecore.xml.type="http://www.eclipse.org/emf/2003/XMLType")
+@Ecore(invocationDelegates="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot", settingDelegates="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot", validationDelegates="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot")
+@namespace(uri="http://www.example.org/misworkflows", prefix="misworkflows")
+@gmf
+package misworkflows;
+
+import "http://www.eclipse.org/emf/2003/XMLType";
+
+@Ecore(constraints="R01 R02")
+@"http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot"(R01="self.tarea->select(t | t.oclIsTypeOf(Inicio))->size() = 1", R02="self.tarea->select(t | t.oclIsTypeOf(Fin))->size() = 1")
+@gmf.diagram
+class workflow {
+	attr String Nombre;
+	val Tarea[+] tarea;
+	val Enlace[+] enlace;
+}
+
+@gmf.node(label="Nombre", figure="svg", svg.uri="platform:/dmss_misworkflows/iconos/matt-icons_folder-white.svg")
+class Actor {
+	attr String Nombre;
+	ref Tarea[+]#tarea_actor actor_tarea;
+	ref TareaMensaje[*]#actoremisor mensajeemisor;
+	ref TareaMensaje[*]#actorreceptor mensajereceptor;
+
+	@"http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot"(derivation="self.actor_tarea->size()")
+	volatile transient derived attr EBigInteger ad01_num_tareas;
+}
+
+@Ecore(constraints="R09")
+@"http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot"(R09="self.enlace_source->size() <= 1 and self.enlace_target->size() <= 1")
+abstract class Tarea {
+	ref Actor[1]#actor_tarea tarea_actor;
+	ref Enlace#source enlace_source;
+	ref Enlace#target enlace_target;
+}
+
+@gmf.node(label="Nombre", figure="svg", svg.uri="platform:/dmss_misworkflows/iconos/file-icon.svg")
+class Inicio extends Tarea {
+	attr String IDWorksflow;
+}
+
+abstract class Normal extends Tarea {
+	attr type.Int[1] ID;
+	attr String Nombre;
+	attr String Desc;
+}
+
+@gmf.node(label="Nombre", figure="svg", svg.uri="platform:/dmss_misworkflows/iconos/file-icon.svg")
+class Fin extends Tarea {
+	attr String IDWorksflow;
+}
+
+@gmf.node(label="Nombre", figure="svg", svg.uri="platform:/dmss_misworkflows/iconos/paper-icon.svg")
+class TareaUsuario extends Normal {
+	ref Tabla[1]#tareausuario tabla;
+}
+
+@gmf.node(label="Nombre", figure="svg", svg.uri="platform:/dmss_misworkflows/iconos/paper-icon.svg")
+class TareaServicio extends Normal {
+	val Servicio[+] servicio;
+	val Dato[*] dato;
+}
+
+@gmf.node(label="Nombre", figure="svg", svg.uri="platform:/dmss_misworkflows/iconos/paper-icon.svg")
+class TareaEnvioMensaje extends TareaMensaje {
+}
+
+@Ecore(constraints="R07")
+@"http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot"(R07="self.enlace_target->exists(enlace | enlace.source.oclIsTypeOf(TareaEnvioMensaje))")
+@gmf.node(label="Nombre", figure="svg", svg.uri="platform:/dmss_misworkflows/iconos/paper-icon.svg")
+class TareaRecepcionMensaje extends TareaMensaje {
+}
+
+@gmf.node(label="Nombre", figure="svg", svg.uri="platform:/dmss_misworkflows/iconos/paper-icon.svg")
+class TareaConsultaBD extends Normal {
+	attr String TablaCondicionSQL;
+	ref BaseDeDatos[1]#tareaconsultabd basededatosconsulta;
+	ref Tabla[1]#tareaconsultatabla tablaconsulta;
+	ref Atributo[1] ad02_datos_a_leer;
+}
+
+@gmf.node(label="Nombre", figure="svg", svg.uri="platform:/dmss_misworkflows/iconos/paper-icon.svg")
+class TareaBorradoBD extends Normal {
+	attr String TablaCondicionSQL;
+	ref BaseDeDatos[1]#tareaborradobd basededatosborrado;
+	ref Tabla[1]#tareaborradotabla tablaborrado;
+}
+
+@gmf.node(label="Nombre", figure="svg", svg.uri="platform:/dmss_misworkflows/iconos/matt-icons_system-file-manager.svg")
+class BaseDeDatos {
+	attr String Nombre;
+	val Tabla[+] tabla;
+	ref TareaConsultaBD[*]#basededatosconsulta tareaconsultabd;
+	ref TareaBorradoBD[*]#basededatosborrado tareaborradobd;
+}
+
+
+abstract class Dato {
+	attr String Nombre;
+}
+
+@gmf.node(label="Nombre", figure="svg", svg.uri="platform:/dmss_misworkflows/iconos/paper-icon.svg")
+class Entrada extends Dato {
+}
+
+@gmf.node(label="Nombre", figure="svg", svg.uri="platform:/dmss_misworkflows/iconos/paper-icon.svg")
+class Salida extends Dato {
+}
+
+@gmf.node(label="Nombre", figure="svg", svg.uri="platform:/dmss_misworkflows/iconos/paper-icon.svg")
+class Servicio {
+	attr String Nombre;
+}
+
+class Tabla {
+	attr String Nombre;
+	val ClavePrimaria[1] claveprimaria;
+	val Atributo[+] atributo;
+	val AtributoAjeno[*] atributoajeno;
+	ref TareaUsuario[*]#tabla tareausuario;
+	ref TareaBorradoBD[*]#tablaborrado tareaborradotabla;
+	ref TareaConsultaBD[*]#tablaconsulta tareaconsultatabla;
+}
+
+@gmf.node(label="Nombre", figure="svg", svg.uri="platform:/dmss_misworkflows/iconos/paper-icon.svg")
+class Atributo {
+	attr String Nombre;
+	attr TipoAtributo Tipo;
+}
+
+
+enum TipoAtributo {
+	Numerico = 0;
+	String = 1;
+	Booleano = 2;
+	ListaSeleccion = 3;
+	Archivo = 4;
+}
+
+@gmf.node(label="Nombre", figure="svg", svg.uri="platform:/dmss_misworkflows/iconos/paper-icon.svg")
+class ClavePrimaria {
+	attr type.Int[1] ID;
+	ref AtributoAjeno[*]#ajeno_primaria primaria_ajeno;
+}
+
+@gmf.node(label="Nombre", figure="svg", svg.uri="platform:/dmss_misworkflows/iconos/paper-icon.svg")
+class AtributoAjeno {
+	ref ClavePrimaria[1]#primaria_ajeno ajeno_primaria;
+	attr String Nombre;
+}
+
+@gmf.node(label="Nombre", figure="svg", svg.uri="platform:/dmss_misworkflows/iconos/matt-icons_system-file-manager.svg")
+class MyWorkflows {
+	attr String Nombre;
+	val BaseDeDatos[+] basededatos;
+	val ProcesoNegocio[+] procesonegocio;
+}
+
+@Ecore(constraints="R03 R04 R05")
+@"http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot"(R03="self.workflow->select(t | t.oclIsTypeOf(Inicio)).oclAsType(Inicio)->forAll(inicio | inicio.enlace_target->isEmpty())", R04="self.workflow->select(t | t.oclIsTypeOf(Fin)).oclAsType(Fin)->forAll(Fin | Fin.enlace_source->isEmpty())", R05="self.actor->forAll(actor | actor.actor_tarea->exists(t | not t.oclIsTypeOf(Inicio) and not t.oclIsTypeOf(Fin)))")
+@gmf.node(label="Nombre", figure="svg", svg.uri="platform:/dmss_misworkflows/iconos/matt-icons_system-file-manager.svg")
+class ProcesoNegocio {
+	attr String Nombre;
+	val workflow[+] workflow;
+	val Actor[+] actor;
+}
+
+abstract class TareaMensaje extends Normal {
+	ref Actor[1]#mensajeemisor actoremisor;
+	ref Actor[1]#mensajereceptor actorreceptor;
+	val DatoAdjunto[*] datoadjunto;
+}
+
+@gmf.node(label="Nombre", figure="svg", svg.uri="platform:/dmss_misworkflows/iconos/paper-icon.svg")
+class DatoAdjunto {
+	attr String Nombre;
+}
+
+@Ecore(constraints="R06 R08")
+@"http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot"(R06="self.source <> self.target", R08="
+		  if self.source.oclIsTypeOf(TareaEnvioMensaje) and self.target.oclIsTypeOf(TareaRecepcionMensaje) then
+		    self.source.tarea_actor <> self.target.tarea_actor
+		  else
+		    self.source.tarea_actor = self.target.tarea_actor
+		  endif")
+@gmf.link(source="source", target="target", label="Nombre", target.decoration="arrow", style="dot")
+class Enlace {
+	attr String Nombre;
+	ref Tarea#enlace_source source;
+	ref Tarea#enlace_target target;
+}
+

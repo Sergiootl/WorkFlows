@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<misworkflows:MyWorkflows
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:misworkflows="http://www.example.org/misworkflows"
+    Nombre="Pizzeria">
+  <basededatos
+      Nombre="Clientes">
+    <tabla Nombre="Clientes"
+        tareausuario="//@procesonegocio.0/@workflow.0/@tarea.1">
+      <claveprimaria
+          ID="1"/>
+      <atributo
+          Nombre="Nombre"
+          Tipo="String"/>
+      <atributo
+          Nombre="DNI"
+          Tipo="String"/>
+    </tabla>
+  </basededatos>
+  <procesonegocio
+      Nombre="Pizzeria">
+    <workflow
+        Nombre="Registrar Cliente">
+      <tarea
+          xsi:type="misworkflows:Inicio"
+          tarea_actor="//@procesonegocio.0/@actor.1"
+          enlace_source="//@procesonegocio.0/@workflow.0/@enlace.0"
+          IDWorksflow="Cliente"/>
+      <tarea
+          xsi:type="misworkflows:TareaUsuario"
+          tarea_actor="//@procesonegocio.0/@actor.1"
+          enlace_source="//@procesonegocio.0/@workflow.0/@enlace.1"
+          enlace_target="//@procesonegocio.0/@workflow.0/@enlace.0"
+          ID="1"
+          Nombre="Usuario registrar"
+          Desc="Registrar"
+          tabla="//@basededatos.0/@tabla.0"/>
+      <tarea
+          xsi:type="misworkflows:Fin"
+          tarea_actor="//@procesonegocio.0/@actor.1"
+          enlace_target="//@procesonegocio.0/@workflow.0/@enlace.1"
+          IDWorksflow="Cliente"/>
+      <enlace
+          Nombre="1"
+          source="//@procesonegocio.0/@workflow.0/@tarea.0"
+          target="//@procesonegocio.0/@workflow.0/@tarea.1"/>
+      <enlace
+          Nombre="2"
+          source="//@procesonegocio.0/@workflow.0/@tarea.1"
+          target="//@procesonegocio.0/@workflow.0/@tarea.2"/>
+    </workflow>
+    <workflow
+        Nombre="Servicio">
+      <tarea
+          xsi:type="misworkflows:Inicio"
+          tarea_actor="//@procesonegocio.0/@actor.0"
+          enlace_source="//@procesonegocio.0/@workflow.1/@enlace.0"
+          IDWorksflow="Servicio"/>
+      <tarea
+          xsi:type="misworkflows:TareaServicio"
+          tarea_actor="//@procesonegocio.0/@actor.0"
+          enlace_source="//@procesonegocio.0/@workflow.1/@enlace.1"
+          enlace_target="//@procesonegocio.0/@workflow.1/@enlace.0"
+          ID="1"
+          Nombre="Papeleo"
+          Desc="Papeleop">
+        <servicio
+            Nombre="S1"/>
+      </tarea>
+      <tarea
+          xsi:type="misworkflows:Fin"
+          tarea_actor="//@procesonegocio.0/@actor.0"
+          enlace_target="//@procesonegocio.0/@workflow.1/@enlace.1"
+          IDWorksflow="Servicio"/>
+      <enlace
+          Nombre="1"
+          source="//@procesonegocio.0/@workflow.1/@tarea.0"
+          target="//@procesonegocio.0/@workflow.1/@tarea.1"/>
+      <enlace
+          Nombre="2"
+          source="//@procesonegocio.0/@workflow.1/@tarea.1"
+          target="//@procesonegocio.0/@workflow.1/@tarea.2"/>
+    </workflow>
+    <actor Nombre="Empleado"
+        actor_tarea="//@procesonegocio.0/@workflow.1/@tarea.0 //@procesonegocio.0/@workflow.1/@tarea.1 //@procesonegocio.0/@workflow.1/@tarea.2"/>
+    <actor Nombre="Jefe"
+        actor_tarea="//@procesonegocio.0/@workflow.0/@tarea.0 //@procesonegocio.0/@workflow.0/@tarea.1 //@procesonegocio.0/@workflow.0/@tarea.2"/>
+  </procesonegocio>
+</misworkflows:MyWorkflows>

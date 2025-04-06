@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="misworkflows" nsURI="http://www.example.org/misworkflows" nsPrefix="misworkflows">
+  <eAnnotations source="http://www.eclipse.org/OCL/Import">
+    <details key="ecore.xml.type" value="http://www.eclipse.org/emf/2003/XMLType"/>
+  </eAnnotations>
+  <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+    <details key="invocationDelegates" value="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot"/>
+    <details key="settingDelegates" value="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot"/>
+    <details key="validationDelegates" value="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot"/>
+  </eAnnotations>
+  <eAnnotations source="gmf"/>
+  <eClassifiers xsi:type="ecore:EClass" name="workflow">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="R01 R02"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="R01" value="self.tarea->select(t | t.oclIsTypeOf(Inicio))->size() = 1"/>
+      <details key="R02" value="self.tarea->select(t | t.oclIsTypeOf(Fin))->size() = 1"/>
+    </eAnnotations>
+    <eAnnotations source="gmf.diagram"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Nombre" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tarea" lowerBound="1" upperBound="-1"
+        eType="#//Tarea" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="enlace" lowerBound="1"
+        upperBound="-1" eType="#//Enlace" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Actor">
+    <eAnnotations source="gmf.node">
+      <details key="label" value="Nombre"/>
+      <details key="figure" value="svg"/>
+      <details key="svg.uri" value="platform:/dmss_misworkflows/iconos/matt-icons_folder-white.svg"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Nombre" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="actor_tarea" lowerBound="1"
+        upperBound="-1" eType="#//Tarea" eOpposite="#//Tarea/tarea_actor"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mensajeemisor" upperBound="-1"
+        eType="#//TareaMensaje" eOpposite="#//TareaMensaje/actoremisor"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mensajereceptor" upperBound="-1"
+        eType="#//TareaMensaje" eOpposite="#//TareaMensaje/actorreceptor"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ad01_num_tareas" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBigInteger"
+        volatile="true" transient="true" derived="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+        <details key="derivation" value="self.actor_tarea->size()"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Tarea" abstract="true">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="R09"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="R09" value="self.enlace_source->size() &lt;= 1 and self.enlace_target->size() &lt;= 1"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tarea_actor" lowerBound="1"
+        eType="#//Actor" eOpposite="#//Actor/actor_tarea"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="enlace_source" eType="#//Enlace"
+        eOpposite="#//Enlace/source"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="enlace_target" eType="#//Enlace"
+        eOpposite="#//Enlace/target"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Inicio" eSuperTypes="#//Tarea">
+    <eAnnotations source="gmf.node">
+      <details key="label" value="Nombre"/>
+      <details key="figure" value="svg"/>
+      <details key="svg.uri" value="platform:/dmss_misworkflows/iconos/file-icon.svg"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="IDWorksflow" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Normal" abstract="true" eSuperTypes="#//Tarea">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ID" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Int"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Nombre" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Desc" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Fin" eSuperTypes="#//Tarea">
+    <eAnnotations source="gmf.node">
+      <details key="label" value="Nombre"/>
+      <details key="figure" value="svg"/>
+      <details key="svg.uri" value="platform:/dmss_misworkflows/iconos/file-icon.svg"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="IDWorksflow" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TareaUsuario" eSuperTypes="#//Normal">
+    <eAnnotations source="gmf.node">
+      <details key="label" value="Nombre"/>
+      <details key="figure" value="svg"/>
+      <details key="svg.uri" value="platform:/dmss_misworkflows/iconos/paper-icon.svg"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tabla" lowerBound="1" eType="#//Tabla"
+        eOpposite="#//Tabla/tareausuario"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TareaServicio" eSuperTypes="#//Normal">
+    <eAnnotations source="gmf.node">
+      <details key="label" value="Nombre"/>
+      <details key="figure" value="svg"/>
+      <details key="svg.uri" value="platform:/dmss_misworkflows/iconos/paper-icon.svg"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="servicio" lowerBound="1"
+        upperBound="-1" eType="#//Servicio" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dato" upperBound="-1" eType="#//Dato"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TareaEnvioMensaje" eSuperTypes="#//TareaMensaje">
+    <eAnnotations source="gmf.node">
+      <details key="label" value="Nombre"/>
+      <details key="figure" value="svg"/>
+      <details key="svg.uri" value="platform:/dmss_misworkflows/iconos/paper-icon.svg"/>
+    </eAnnotations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TareaRecepcionMensaje" eSuperTypes="#//TareaMensaje">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="R07"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="R07" value="self.enlace_target->exists(enlace | enlace.source.oclIsTypeOf(TareaEnvioMensaje))"/>
+    </eAnnotations>
+    <eAnnotations source="gmf.node">
+      <details key="label" value="Nombre"/>
+      <details key="figure" value="svg"/>
+      <details key="svg.uri" value="platform:/dmss_misworkflows/iconos/paper-icon.svg"/>
+    </eAnnotations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TareaConsultaBD" eSuperTypes="#//Normal">
+    <eAnnotations source="gmf.node">
+      <details key="label" value="Nombre"/>
+      <details key="figure" value="svg"/>
+      <details key="svg.uri" value="platform:/dmss_misworkflows/iconos/paper-icon.svg"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="TablaCondicionSQL" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="basededatosconsulta" lowerBound="1"
+        eType="#//BaseDeDatos" eOpposite="#//BaseDeDatos/tareaconsultabd"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tablaconsulta" lowerBound="1"
+        eType="#//Tabla" eOpposite="#//Tabla/tareaconsultatabla"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ad02_datos_a_leer" lowerBound="1"
+        eType="#//Atributo"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TareaBorradoBD" eSuperTypes="#//Normal">
+    <eAnnotations source="gmf.node">
+      <details key="label" value="Nombre"/>
+      <details key="figure" value="svg"/>
+      <details key="svg.uri" value="platform:/dmss_misworkflows/iconos/paper-icon.svg"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="TablaCondicionSQL" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="basededatosborrado" lowerBound="1"
+        eType="#//BaseDeDatos" eOpposite="#//BaseDeDatos/tareaborradobd"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tablaborrado" lowerBound="1"
+        eType="#//Tabla" eOpposite="#//Tabla/tareaborradotabla"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BaseDeDatos">
+    <eAnnotations source="gmf.node">
+      <details key="label" value="Nombre"/>
+      <details key="figure" value="svg"/>
+      <details key="svg.uri" value="platform:/dmss_misworkflows/iconos/matt-icons_system-file-manager.svg"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Nombre" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tabla" lowerBound="1" upperBound="-1"
+        eType="#//Tabla" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tareaconsultabd" upperBound="-1"
+        eType="#//TareaConsultaBD" eOpposite="#//TareaConsultaBD/basededatosconsulta"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tareaborradobd" upperBound="-1"
+        eType="#//TareaBorradoBD" eOpposite="#//TareaBorradoBD/basededatosborrado"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Dato" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Nombre" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Entrada" eSuperTypes="#//Dato">
+    <eAnnotations source="gmf.node">
+      <details key="label" value="Nombre"/>
+      <details key="figure" value="svg"/>
+      <details key="svg.uri" value="platform:/dmss_misworkflows/iconos/paper-icon.svg"/>
+    </eAnnotations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Salida" eSuperTypes="#//Dato">
+    <eAnnotations source="gmf.node">
+      <details key="label" value="Nombre"/>
+      <details key="figure" value="svg"/>
+      <details key="svg.uri" value="platform:/dmss_misworkflows/iconos/paper-icon.svg"/>
+    </eAnnotations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Servicio">
+    <eAnnotations source="gmf.node">
+      <details key="label" value="Nombre"/>
+      <details key="figure" value="svg"/>
+      <details key="svg.uri" value="platform:/dmss_misworkflows/iconos/paper-icon.svg"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Nombre" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Tabla">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Nombre" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="claveprimaria" lowerBound="1"
+        eType="#//ClavePrimaria" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="atributo" lowerBound="1"
+        upperBound="-1" eType="#//Atributo" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="atributoajeno" upperBound="-1"
+        eType="#//AtributoAjeno" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tareausuario" upperBound="-1"
+        eType="#//TareaUsuario" eOpposite="#//TareaUsuario/tabla"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tareaborradotabla" upperBound="-1"
+        eType="#//TareaBorradoBD" eOpposite="#//TareaBorradoBD/tablaborrado"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tareaconsultatabla" upperBound="-1"
+        eType="#//TareaConsultaBD" eOpposite="#//TareaConsultaBD/tablaconsulta"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Atributo">
+    <eAnnotations source="gmf.node">
+      <details key="label" value="Nombre"/>
+      <details key="figure" value="svg"/>
+      <details key="svg.uri" value="platform:/dmss_misworkflows/iconos/paper-icon.svg"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Nombre" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Tipo" eType="#//TipoAtributo"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="TipoAtributo">
+    <eLiterals name="Numerico"/>
+    <eLiterals name="String" value="1"/>
+    <eLiterals name="Booleano" value="2"/>
+    <eLiterals name="ListaSeleccion" value="3"/>
+    <eLiterals name="Archivo" value="4"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ClavePrimaria">
+    <eAnnotations source="gmf.node">
+      <details key="label" value="Nombre"/>
+      <details key="figure" value="svg"/>
+      <details key="svg.uri" value="platform:/dmss_misworkflows/iconos/paper-icon.svg"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ID" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Int"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="primaria_ajeno" upperBound="-1"
+        eType="#//AtributoAjeno" eOpposite="#//AtributoAjeno/ajeno_primaria"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AtributoAjeno">
+    <eAnnotations source="gmf.node">
+      <details key="label" value="Nombre"/>
+      <details key="figure" value="svg"/>
+      <details key="svg.uri" value="platform:/dmss_misworkflows/iconos/paper-icon.svg"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ajeno_primaria" lowerBound="1"
+        eType="#//ClavePrimaria" eOpposite="#//ClavePrimaria/primaria_ajeno"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Nombre" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MyWorkflows">
+    <eAnnotations source="gmf.node">
+      <details key="label" value="Nombre"/>
+      <details key="figure" value="svg"/>
+      <details key="svg.uri" value="platform:/dmss_misworkflows/iconos/matt-icons_system-file-manager.svg"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Nombre" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="basededatos" lowerBound="1"
+        upperBound="-1" eType="#//BaseDeDatos" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="procesonegocio" lowerBound="1"
+        upperBound="-1" eType="#//ProcesoNegocio" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ProcesoNegocio">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="R03 R04 R05"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="R03" value="self.workflow->select(t | t.oclIsTypeOf(Inicio)).oclAsType(Inicio)->forAll(inicio | inicio.enlace_target->isEmpty())"/>
+      <details key="R04" value="self.workflow->select(t | t.oclIsTypeOf(Fin)).oclAsType(Fin)->forAll(Fin | Fin.enlace_source->isEmpty())"/>
+      <details key="R05" value="self.actor->forAll(actor | actor.actor_tarea->exists(t | not t.oclIsTypeOf(Inicio) and not t.oclIsTypeOf(Fin)))"/>
+    </eAnnotations>
+    <eAnnotations source="gmf.node">
+      <details key="label" value="Nombre"/>
+      <details key="figure" value="svg"/>
+      <details key="svg.uri" value="platform:/dmss_misworkflows/iconos/matt-icons_system-file-manager.svg"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Nombre" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="workflow" lowerBound="1"
+        upperBound="-1" eType="#//workflow" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="actor" lowerBound="1" upperBound="-1"
+        eType="#//Actor" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TareaMensaje" abstract="true" eSuperTypes="#//Normal">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="actoremisor" lowerBound="1"
+        eType="#//Actor" eOpposite="#//Actor/mensajeemisor"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="actorreceptor" lowerBound="1"
+        eType="#//Actor" eOpposite="#//Actor/mensajereceptor"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="datoadjunto" upperBound="-1"
+        eType="#//DatoAdjunto" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DatoAdjunto">
+    <eAnnotations source="gmf.node">
+      <details key="label" value="Nombre"/>
+      <details key="figure" value="svg"/>
+      <details key="svg.uri" value="platform:/dmss_misworkflows/iconos/paper-icon.svg"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Nombre" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Enlace">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="R06 R08"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="R06" value="self.source &lt;> self.target"/>
+      <details key="R08" value="&#xA;&#x9;&#x9;  if self.source.oclIsTypeOf(TareaEnvioMensaje) and self.target.oclIsTypeOf(TareaRecepcionMensaje) then&#xA;&#x9;&#x9;    self.source.tarea_actor &lt;> self.target.tarea_actor&#xA;&#x9;&#x9;  else&#xA;&#x9;&#x9;    self.source.tarea_actor = self.target.tarea_actor&#xA;&#x9;&#x9;  endif"/>
+    </eAnnotations>
+    <eAnnotations source="gmf.link">
+      <details key="source" value="source"/>
+      <details key="target" value="target"/>
+      <details key="label" value="Nombre"/>
+      <details key="target.decoration" value="arrow"/>
+      <details key="style" value="dot"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Nombre" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="source" eType="#//Tarea"
+        eOpposite="#//Tarea/enlace_source"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="#//Tarea"
+        eOpposite="#//Tarea/enlace_target"/>
+  </eClassifiers>
+</ecore:EPackage>
